@@ -1,7 +1,7 @@
 import os
 
 #from gym_wrapper import URRobotGym
-from pusher import PusherEnv
+from env.pusher import PusherEnv
 
 from stable_baselines.common.policies import MlpPolicy
 from stable_baselines.common import make_vec_env

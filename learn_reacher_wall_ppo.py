@@ -1,7 +1,7 @@
 import os
 
 #from gym_wrapper import URRobotGym
-from reacher_wall import ReacherWallEnv
+from env.reacher_wall import ReacherWallEnv
 
 from stable_baselines.common.policies import MlpPolicy
 from stable_baselines.common import make_vec_env
