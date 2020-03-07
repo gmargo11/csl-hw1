@@ -14,5 +14,5 @@ The code for learning a policy for the reacher_wall environment with PPO is in: 
 The code for learning a policy for the pusher enviornment with PPO is in: learn_pusher.py
 
 ## Acknowledgements
-The gym environment templates used for training were provided by the 6.884 staff. Code for PPO training is adapted from OpenAI's stable-baselines library.
+The gym environment templates used for training were provided by the 6.884 staff. Code for PPO training is adapted from OpenAI's `stable baselines` library.
 
