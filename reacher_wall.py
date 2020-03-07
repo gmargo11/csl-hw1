@@ -11,10 +11,11 @@ from airobot.utils.common import euler2quat
 from airobot.utils.common import quat_multiply
 from airobot.utils.common import rotvec2quat
 from gym import spaces
+from gym import Env
 import pybullet as p
 
 
-class ReacherWallEnv:
+class ReacherWallEnv(Env):
 	def __init__(self, action_repeat=10, render=False):
 		self._action_repeat = action_repeat		
 		self.robot = Robot('ur5e_stick', pb=True, pb_cfg={'gui': render, 'realtime':False})
@@ -74,8 +75,19 @@ class ReacherWallEnv:
 		return state, reward, done, info
 
 	def compute_reward_reach_wall(self, state):
-		"""Fill in"""
-		raise NotImplementedError
+		# reacher reward
+
+		goal_dist = ((state[0]-self.goal[0])**2 + (state[1]-self.goal[1])**2 + (state[2]-self.goal[2])**2)**0.5
+		reward = -100 * goal_dist - 1
+		#reward = -1
+		if goal_dist < 0.075:
+			reward = 100
+
+		# new reward
+
+		## NOT YET IMPLEMENTED
+
+		return reward
 
 	def _get_obs(self):
 		gripper_pos = self.robot.arm.get_ee_pose()[0]

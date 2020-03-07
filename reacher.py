@@ -74,7 +74,7 @@ class ReacherEnv(Env):
 	def compute_reward_reach(self, state):
 
 		goal_dist = ((state[0]-self.goal[0])**2 + (state[1]-self.goal[1])**2 + (state[2]-self.goal[2])**2)**0.5
-		reward = -10 * goal_dist**2 - 10
+		reward = -100 * goal_dist - 1
 		#reward = -1
 		if goal_dist < 0.075:
 			reward = 100

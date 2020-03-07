@@ -17,14 +17,15 @@ def main():
     # create the environment
     log_dir = "tmp/gym/"
     os.makedirs(log_dir, exist_ok=True)
-    env = ReacherEnv(render=False)
-    env = Monitor(env, log_dir, allow_early_resets=True)
+    #env = ReacherEnv(render=False)
+    env = make_vec_env(ReacherEnv, n_envs=4)
+    #env = Monitor(env, log_dir, allow_early_resets=True)
     #env = make_vec_env(URRobotGym, n_envs=1)
-    model = PPO2('MlpPolicy', env, verbose=1).learn(50000)
+    model = PPO2('MlpPolicy', env, verbose=1, ).learn(100000)
     model.save('./ppo2.zip')
 
     # plot training progress
-    results_plotter.plot_results([log_dir], 50000, results_plotter.X_TIMESTEPS, "PPO UR Robot")
+    results_plotter.plot_results([log_dir], 100000, results_plotter.X_TIMESTEPS, "PPO UR Robot")
     plt.show()
 
 

@@ -11,10 +11,11 @@ from airobot.utils.common import euler2quat
 from airobot.utils.common import quat_multiply
 from airobot.utils.common import rotvec2quat
 from gym import spaces
+from gym import Env
 import pybullet as p
 
 
-class PusherEnv:
+class PusherEnv(Env):
 	def __init__(self, action_repeat=10, render=False):
 		self._action_repeat = action_repeat		
 		self.robot = Robot('ur5e_stick', pb=True, pb_cfg={'gui': render, 'realtime':False})
