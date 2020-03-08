@@ -1,5 +1,7 @@
 import time
 
+import stable_baselines.ppo2.hw1implementation as hw1implementation
+
 import gym
 import numpy as np
 import tensorflow as tf
@@ -177,15 +179,29 @@ class PPO2(ActorCriticRLModel):
                     vf_losses2 = tf.square(vpred_clipped - self.rewards_ph)
                     self.vf_loss = .5 * tf.reduce_mean(tf.maximum(vf_losses1, vf_losses2))
 
-                    ratio = tf.exp(self.old_neglog_pac_ph - neglogpac)
-                    pg_losses = -self.advs_ph * ratio
-                    pg_losses2 = -self.advs_ph * tf.clip_by_value(ratio, 1.0 - self.clip_range_ph, 1.0 +
-                                                                  self.clip_range_ph)
-                    self.pg_loss = tf.reduce_mean(tf.maximum(pg_losses, pg_losses2))
+                    ##########################################################
+                    #        Clipped Policy Loss (Implemented by GBM)        #
+                    ##########################################################
+
+                    #ratio = tf.exp(self.old_neglog_pac_ph - neglogpac)
+                    #pg_losses = -self.advs_ph * ratio
+                    #pg_losses2 = -self.advs_ph * tf.clip_by_value(ratio, 1.0 - self.clip_range_ph, 1.0 +
+                    #                                              self.clip_range_ph)
+                    #self.pg_loss = tf.reduce_mean(tf.maximum(pg_losses, pg_losses2))
+                    #
+                    #self.clipfrac = tf.reduce_mean(tf.cast(tf.greater(tf.abs(ratio - 1.0),
+                    #                                                  self.clip_range_ph), tf.float32))
+
+                    self.pg_loss, self.clipfrac = hw1implementation.compute_clipped_policy_loss(negative_log_prob_action = neglogpac, old_negative_log_prob_action = self.old_neglog_pac_ph, advantage_estimates = self.advs_ph, clip_range = self.clip_range_ph)
+
+                    ###########################################################
+                    #                 End Clipped Policy Loss                 #
+                    ###########################################################
+
                     self.approxkl = .5 * tf.reduce_mean(tf.square(neglogpac - self.old_neglog_pac_ph))
-                    self.clipfrac = tf.reduce_mean(tf.cast(tf.greater(tf.abs(ratio - 1.0),
-                                                                      self.clip_range_ph), tf.float32))
+
                     loss = self.pg_loss - self.entropy * self.ent_coef + self.vf_loss * self.vf_coef
+
 
                     tf.summary.scalar('entropy_loss', self.entropy)
                     tf.summary.scalar('policy_gradient_loss', self.pg_loss)
