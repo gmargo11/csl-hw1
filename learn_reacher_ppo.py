@@ -22,13 +22,13 @@ def main():
     results = []
 
     for i in range(num_trials):
-        log_dir = "tmp/gym/%d"%(i)
+        log_dir = "tmp/gym/reacher/%d"%(i)
         os.makedirs(log_dir, exist_ok=True)
         env = ReacherEnv(render=False)
         env = Monitor(env, log_dir, allow_early_resets=True)
         #env = make_vec_env(env, n_envs=4)
 
-        model = PPO2('MlpPolicy', env, verbose=1, seed=i, cliprange=0.4).learn(trial_length)
+        model = PPO2('MlpPolicy', env, verbose=1, seed=i, cliprange=0.2).learn(trial_length)
         model.save('./data/reacher%d.zip'%(i))
 
         results += [env.get_episode_rewards()]

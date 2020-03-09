@@ -75,18 +75,26 @@ class ReacherWallEnv(Env):
 		return state, reward, done, info
 
 	def compute_reward_reach_wall(self, state):
+		goal_dist = np.linalg.norm(state - self.goal)
+		
 		# reacher reward
-
-		goal_dist = ((state[0]-self.goal[0])**2 + (state[1]-self.goal[1])**2 + (state[2]-self.goal[2])**2)**0.5
-		reward = -100 * goal_dist - 1
+		#reward = 1 - goal_dist
 		#reward = -1
-		if goal_dist < 0.075:
-			reward = 100
+		#if goal_dist < 0.075:
+		#	reward = 100
 
 		# new reward
-
-		## NOT YET IMPLEMENTED
-
+		goal_y_dist = abs(state[1] - self.goal[1])
+		#print(goal_y_dist)
+		start_dist = np.linalg.norm(state - self.init)
+		start_to_goal = np.linalg.norm(self.goal - self.init)
+		if goal_y_dist > 0.55 * start_to_goal:
+			reward = 0.5 * (1 + 0.5 * start_dist - goal_y_dist)
+		if goal_y_dist <= 0.55 * start_to_goal:
+			reward = 1 + 200 * 0.075**3 / goal_dist**3
+		if goal_dist < 0.075:
+			reward = 300
+		
 		return reward
 
 	def _get_obs(self):

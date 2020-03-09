@@ -81,8 +81,48 @@ class PusherEnv(Env):
 		return state, reward, done, info
 
 	def compute_reward_push(self, state):
-		"""Fill in"""
-		raise NotImplementedError
+		gripper_pos = state[0:3]
+		obj_pos = state[3:6]
+
+		dist_obj_goal = np.linalg.norm(obj_pos - self.goal)
+		dist_grip_obj = np.linalg.norm(obj_pos - gripper_pos)
+		init_dist = np.linalg.norm(self.init_obj - self.goal)
+
+		# bonus for proximity of object to goal
+		#reward =  5 * (- dist_obj_goal)
+		reward = 0
+
+		# bonus for alignment of pusher, object, goal
+		a = (self.goal[1] - obj_pos[1]) 
+		b = (self.goal[0] - obj_pos[0])
+		d = abs(a * gripper_pos[0] - b * gripper_pos[1] - (a * obj_pos[0] - b * obj_pos[1])) / (a**2 + b**2) # distance from pusher to line
+		#print(d)
+		is_aligned = ((obj_pos[1] - self.goal[1]) * (gripper_pos[1] - obj_pos[1]) > 0) and ((obj_pos[0] - self.goal[0]) * (gripper_pos[0] - obj_pos[0]) > 0)
+		if is_aligned and d < 0.1 and dist_grip_obj < 0.1:
+			reward += 200 * (0.2 - dist_grip_obj) * (init_dist - dist_obj_goal)
+			#print(reward)
+		#reward = 0
+
+		# penalty for pusher being far from object
+		if dist_grip_obj > 0.2:
+			reward = -dist_grip_obj*5
+
+		# linear bonus for proximity to goal
+		reward += 20 * (init_dist - dist_obj_goal)
+
+		# extra bonus for goal immediate area
+		if dist_obj_goal < 0.08:
+			reward += 200 + (0.08 - dist_obj_goal) * 1000
+
+		# maximum bonus for reaching goal
+		if dist_obj_goal < 0.05:
+			reward += 500
+			print("goal achieved!")
+
+		#print('dist:', dist_obj_goal)
+
+		return reward
+
 
 	def _get_obs(self):
 		gripper_pos = self.robot.arm.get_ee_pose()[0]
