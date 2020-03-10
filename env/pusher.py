@@ -93,7 +93,7 @@ class PusherEnv(Env):
 		reward = 0
 
 		if dist_grip_obj > 0.1 and dist_obj_goal > 0.05:
-			reward = -dist_grip_obj**2 * 400
+			reward = -dist_grip_obj**2 * 40
 
 		# bonus for alignment of pusher, object, goal
 		a = (self.goal[1] - obj_pos[1]) 
@@ -102,28 +102,26 @@ class PusherEnv(Env):
 		#print(d)
 		is_aligned = ((obj_pos[1] - self.goal[1]) * (gripper_pos[1] - obj_pos[1]) > 0) and ((obj_pos[0] - self.goal[0]) * (gripper_pos[0] - obj_pos[0]) > 0)
 		if is_aligned:
-			reward += (10 - 10 * d)
+			reward += (1 - d)
 			if d < 0.4:
-				reward += 100 * (0.4 - dist_grip_obj)
+				reward += (0.4 - dist_grip_obj)
 
 		#print(d, dist_grip_obj, dist_obj_goal)
 			#print(reward)
 		#reward = 0
 
-		# penalty for pusher being far from object
-		#if dist_grip_obj > 0.2:
 		
 
 		# bonus for proximity to goal
-		reward += 300 * (init_dist - dist_obj_goal)
+		reward += 30 * (init_dist - dist_obj_goal)
 
 		# extra bonus for goal immediate area
 		#if dist_obj_goal < 0.10:
 		#	reward += 100 + (0.08 - dist_obj_goal) * 200
 
-		# maximum bonus for reaching goal
+		# when goal is reached, move gripper away from puck
 		if dist_obj_goal < 0.05:
-			reward = 500 + min(dist_grip_obj, 0.5) * 300
+			reward += 10 + dist_grip_obj * 20
 			print("goal achieved!")
 
 		#print('dist:', dist_obj_goal)

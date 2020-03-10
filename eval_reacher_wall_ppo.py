@@ -13,8 +13,8 @@ import matplotlib.pyplot as plt
 # Code adapted from stable_baselines
 
 def main():
-    model = PPO2.load("./data/reacher_wall_better_reward0.zip")     
-    #model = PPO2.load("./data/reacher_wall0.zip")   
+    model = PPO2.load("./data/reacher_wall_better_reward1.zip")     
+    #model = PPO2.load("./data/reacher_wall1.zip")   
     # Enjoy trained agent
     env = ReacherWallEnv(render=True)
     obs = env.reset()

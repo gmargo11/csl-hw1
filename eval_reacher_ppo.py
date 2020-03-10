@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 # Code adapted from stable_baselines
 
 def main():
-    model = PPO2.load("./data/reacher1.zip")     
+    model = PPO2.load("./data/reacher2.zip")     
     # Enjoy trained agent
     env = ReacherEnv(render=True)
     obs = env.reset()

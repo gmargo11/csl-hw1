@@ -79,7 +79,7 @@ class ReacherWallEnv(Env):
 		
 		# reacher reward
 		reward = 1 - goal_dist
-		reward = -1
+		#reward = -1
 		if goal_dist < 0.075:
 			reward = 100
 
