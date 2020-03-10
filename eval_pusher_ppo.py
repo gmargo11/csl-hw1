@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 # Code adapted from stable_baselines
 
 def main():
-    model = PPO2.load("./data/pusher1.zip")     
+    model = PPO2.load("./data/pusher0.zip")     
     # Enjoy trained agent
     env = PusherEnv(render=True)
     obs = env.reset()
