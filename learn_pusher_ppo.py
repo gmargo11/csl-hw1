@@ -25,12 +25,12 @@ def main():
     for i in range(num_trials):
         log_dir = "tmp/gym/pusher/%d"%(i)
         os.makedirs(log_dir, exist_ok=True)
-        #env = PusherEnv(render=False)
+        #env = PusherEnv(render=True)
         #env = Monitor(env, log_dir, allow_early_resets=True)
         env = make_vec_env(PusherEnv, n_envs=10)
         env = VecMonitor(env)
 
-        model = PPO2('MlpPolicy', env, verbose=1, seed=i, cliprange=0.3, learning_rate=1e-5).learn(trial_length)
+        model = PPO2('MlpPolicy', env, verbose=1, seed=i, cliprange=0.1).learn(trial_length)
         model.save('./data/pusher%d.zip'%(i))
 
         results += [env.get_episode_rewards()]

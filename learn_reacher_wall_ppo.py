@@ -25,7 +25,7 @@ def main():
     results = []
 
     for i in range(num_trials):
-        log_dir = "tmp/gym/reacher_wall/%d"%(i)
+        log_dir = "tmp/gym/reacher_wall_old_reward/%d"%(i)
         os.makedirs(log_dir, exist_ok=True)
         #env = PusherEnv(render=False)
         #env = Monitor(env, log_dir, allow_early_resets=True)
@@ -33,8 +33,8 @@ def main():
         env = VecMonitor(env)
 
         model = PPO2('MlpPolicy', env, verbose=1, seed=i, cliprange=0.2).learn(trial_length)
-        #model.save('./data/reacher_wall%d.zip'%(i))
-        model.save('./data/reacher_wall_better_reward%d.zip'%(i))
+        model.save('./data/reacher_wall%d.zip'%(i))
+        #model.save('./data/reacher_wall_better_reward%d.zip'%(i))
 
         results += [env.get_episode_rewards()]
 
@@ -57,7 +57,7 @@ def main():
     plt.figure()
     plt.plot(t, mean_reward, color='blue')
     plt.fill_between(t, mean_reward+std_reward, mean_reward-std_reward, facecolor='blue', alpha=0.5)
-    plt.title("Reacher Wall Reward during PPO Training (Improved Reward Function)")
+    plt.title("Reacher Wall Reward during PPO Training")# (Improved Reward Function)")
     plt.xlabel("Episode")
     plt.ylabel("Episode Reward")
     plt.show()
@@ -65,8 +65,8 @@ def main():
 
     del model
 
-    #model = PPO2.load("./data/reacher_wall1.zip")
-    model = PPO2.load("./data/reacher_wall_better_reward1.zip")
+    model = PPO2.load("./data/reacher_wall1.zip")
+    #model = PPO2.load("./data/reacher_wall_better_reward1.zip")
     # Enjoy trained agent
     env = ReacherWallEnv(render=True)
     obs = env.reset()
