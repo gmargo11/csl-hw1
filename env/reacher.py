@@ -73,7 +73,7 @@ class ReacherEnv(Env):
 
 	def compute_reward_reach(self, state):
 
-		goal_dist = ((state[0]-self.goal[0])**2 + (state[1]-self.goal[1])**2 + (state[2]-self.goal[2])**2)**0.5
+		goal_dist = np.linalg.norm(state - self.goal)
 		reward = 1 - goal_dist
 		#reward = -1
 		if goal_dist < 0.075:

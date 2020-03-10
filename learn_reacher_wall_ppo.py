@@ -25,7 +25,7 @@ def main():
     results = []
 
     for i in range(num_trials):
-        log_dir = "tmp/gym/pusher/%d"%(i)
+        log_dir = "tmp/gym/reacher_wall/%d"%(i)
         os.makedirs(log_dir, exist_ok=True)
         #env = PusherEnv(render=False)
         #env = Monitor(env, log_dir, allow_early_resets=True)

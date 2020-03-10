@@ -1,6 +1,7 @@
 import os
 
 from env.reacher import ReacherEnv
+from VecMonitor import VecMonitor
 
 from stable_baselines.common.policies import MlpPolicy
 from stable_baselines.common import make_vec_env
@@ -24,18 +25,14 @@ def main():
     for i in range(num_trials):
         log_dir = "tmp/gym/reacher/%d"%(i)
         os.makedirs(log_dir, exist_ok=True)
-        env = ReacherEnv(render=False)
-        env = Monitor(env, log_dir, allow_early_resets=True)
-        #env = make_vec_env(env, n_envs=4)
+
+        env = make_vec_env(ReacherEnv, n_envs=10)
+        env = VecMonitor(env)
 
         model = PPO2('MlpPolicy', env, verbose=1, seed=i, cliprange=0.2).learn(trial_length)
         model.save('./data/reacher%d.zip'%(i))
 
         results += [env.get_episode_rewards()]
-
-
-        # plot training progress
-        #results_plotter.plot_results([log_dir], 100000, results_plotter.X_TIMESTEPS, "Reacher Performance")
 
     # plot training result
 
@@ -43,7 +40,11 @@ def main():
     print(results.shape)
     mean_reward = np.mean(results, 0)
     std_reward = np.std(results, 0)
-    t = np.array(range(1, results.shape[1]+1))
+
+    smoothing_window = 5
+    mean_reward = np.convolve(mean_reward, np.ones((smoothing_window,))/smoothing_window, mode='valid')
+    std_reward = np.convolve(std_reward, np.ones((smoothing_window,))/smoothing_window, mode='valid')
+    t = np.array(range(1, mean_reward.shape[0]+1))
 
     plt.figure()
     plt.plot(t, mean_reward, color='blue')
