@@ -18,7 +18,7 @@ def main():
     # create the environment
 
     num_trials = 3
-    trial_length = 200000
+    trial_length = 500000
 
     results = []
 
