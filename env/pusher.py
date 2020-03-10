@@ -111,7 +111,7 @@ class PusherEnv(Env):
 		reward += 20 * (init_dist - dist_obj_goal)
 
 		# extra bonus for goal immediate area
-		if dist_obj_goal < 0.08:
+		if dist_obj_goal < 0.10:
 			reward += 200 + (0.08 - dist_obj_goal) * 1000
 
 		# maximum bonus for reaching goal
@@ -120,6 +120,8 @@ class PusherEnv(Env):
 			print("goal achieved!")
 
 		#print('dist:', dist_obj_goal)
+
+
 
 		return reward
 

@@ -30,7 +30,7 @@ def main():
         env = make_vec_env(PusherEnv, n_envs=10)
         env = VecMonitor(env)
 
-        model = PPO2('MlpPolicy', env, verbose=1, seed=i, cliprange=0.3).learn(trial_length)
+        model = PPO2('MlpPolicy', env, verbose=1, seed=i, cliprange=0.3, learning_rate=1e-5).learn(trial_length)
         model.save('./data/pusher%d.zip'%(i))
 
         results += [env.get_episode_rewards()]
